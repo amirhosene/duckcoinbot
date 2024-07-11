@@ -8,7 +8,7 @@ from data import config
 import datetime
 
 class Duckbot:
-    def __init__(self, thread, account, session, proxy):
+    def __init__(self, thread, account, session, proxy, useragent):
         self.proxy - f"http://{proxy}" if proxy is not None else None
         self.thread = thread
         
@@ -24,6 +24,7 @@ class Duckbot:
 
         self.client = Client(name= account, api_id=config.API_ID, api_hash=config.API_HASH, workdir=config.WORKDIR, proxy=proxy)
         self.session = session
+        self.useragent=useragent
     async def logout(self):
         """
         Logout by closing the aiohttp session.
@@ -77,7 +78,7 @@ class Duckbot:
                 'Sec-Fetch-Dest': 'empty',
                 'Sec-Fetch-Mode': 'cors',
                 'Sec-Fetch-Site': 'cross-site',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+                'User-Agent': self.useragent
             }
 
             response = await self.session.get('https://api.duckcoingame.duckdns.org/v1/api/game/time', headers=headers)
@@ -131,7 +132,7 @@ class Duckbot:
                 'Sec-Fetch-Dest': 'empty',
                 'Sec-Fetch-Mode': 'cors',
                 'Sec-Fetch-Site': 'cross-site',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0',
+                'User-Agent': self.useragent,
                 'Content-Type': 'application/json; charset=utf-8'
             }
             response = await self.session.post('https://api.duckcoingame.duckdns.org/v1/api/game/claim', headers=headers)
@@ -166,7 +167,7 @@ class Duckbot:
                 'Sec-Fetch-Dest': 'empty',
                 'Sec-Fetch-Mode': 'cors',
                 'Sec-Fetch-Site': 'cross-site',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+                'User-Agent': self.useragent
             }
             response = await self.session.post('https://api.duckcoingame.duckdns.org/v1/api/game/farm', headers=headers)
             status = response.status
