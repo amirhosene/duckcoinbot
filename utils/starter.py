@@ -23,20 +23,24 @@ async def start(thread: int, account: str, proxy: [str, None]):
                 await asyncio.sleep(uniform(*config.DELAYS['ACCOUNT']))
                 max_try = 2
                 await Duck.login()
+                
+                
                 while True:
                     try:
                         timestamp = datetime.timestamp(datetime.now())
                         start_time, end_time, balance, state, end_dt= await Duck.time()
-                        if start_time is None and end_time is None and max_try > 0 and state != "inProgress":
+                        if start_time is None and end_time is None and max_try > 0 and state == "notStarted":
                             await Duck.start()
                             logger.info(f"{account} | Start farming!")
                             max_try -= 1
+                            await sleep(5)
 
                         if (start_time is not None and end_time is not None and timestamp is not None and 
                                   timestamp >= end_time and max_try > 0):
                             claim = await Duck.claim()
                             logger.success(f"{account} | Claimed reward! Balance: {balance}")
                             max_try -= 1
+                            await sleep(5)
 
                         if state == "inProgress":
                             sleep_duration = end_dt - timestamp
@@ -48,15 +52,9 @@ async def start(thread: int, account: str, proxy: [str, None]):
                         elif max_try == 0:
                             break
                     except Exception as e:
-                                logger.error(f"{account} | Error in farming management: {e}")
+                                 logger.error(f"{account} | Error in farming management: {e}")
             except Exception as outer_e:
                 logger.error(f"{account} | Session error: {outer_e}")
             finally:
                 logger.info(f"{account} | Reconnecting, 61 s")
                 await sleep(61)
-        
-
-
-
-
-        
