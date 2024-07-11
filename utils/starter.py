@@ -18,8 +18,9 @@ async def start(thread: int, account: str, proxy: [str, None]):
         async with aiohttp.ClientSession(headers={'User-Agent': generate_random_user_agent(device_type='android',
                                                                                             browser_type='chrome')},
                                         timeout=aiohttp.ClientTimeout(total=60)) as session:
+            useragent= generate_random_user_agent(device_type='android',browser_type='chrome')
             try:                                     
-                Duck = Duckbot(account=account, thread=thread, session=session, proxy=proxy)
+                Duck = Duckbot(account=account, thread=thread, session=session, proxy=proxy, useragent=useragent)
                 await asyncio.sleep(uniform(*config.DELAYS['ACCOUNT']))
                 max_try = 2
                 await Duck.login()
