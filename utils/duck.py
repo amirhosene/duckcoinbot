@@ -87,11 +87,15 @@ class Duckbot:
 
             start_time = None
             end_time = None
-            en = res_json.get('end')
             state = res_json.get("state")
-            end_dt = datetime.datetime.fromisoformat(en[:-1])
-            end_dt = end_dt.timestamp()
-            if res_json.get("state") == "completed":
+            if state == "notStarted":
+                end_dt= None
+
+            if state == "inProgress":
+                en = res_json.get('end')
+                end_dt = datetime.datetime.fromisoformat(en[:-1])
+                end_dt = end_dt.timestamp()
+            if state == "completed":
                 start = res_json.get('start')
                 end = res_json.get('end')
                 
